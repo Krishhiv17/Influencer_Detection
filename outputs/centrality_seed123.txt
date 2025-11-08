@@ -1,0 +1,64 @@
+Analysis Summary:
+- Betweenness sampling with k=300 and seed=123 locks in 813286, 15846407, and 17093617 as dominant bridges while surfacing 59804598 and 15485441 as additional connectors.
+- Eight of the top PageRank users also appear in the in-degree list, highlighting strong alignment between prestige and popularity when examining 15 leaders.
+- Overlap figures (3 shared between degree/betweenness, 6 between betweenness/PageRank) show broader consensus once longer top-k lists are considered.
+- Use this run alongside seed=999 to demonstrate that sampling noise affects only lower-ranked bridges; the head of the list is stable.
+
+Loaded follower graph with 76,244 users and 1,667,871 directed edges.
+
+Computing centrality measures ...
+Top users by in-degree centrality (followers):
+   1. user 115485051 -> score=0.043545 followers=3320
+   2. user 40981798 -> score=0.042102 followers=3210
+   3. user 43003845 -> score=0.035833 followers=2732
+   4. user 813286 -> score=0.033787 followers=2576
+   5. user 22462180 -> score=0.032410 followers=2471
+   6. user 34428380 -> score=0.032291 followers=2462
+   7. user 15913 -> score=0.027583 followers=2103
+   8. user 7861312 -> score=0.026481 followers=2019
+   9. user 3359851 -> score=0.024566 followers=1873
+  10. user 11348282 -> score=0.022179 followers=1691
+  11. user 1183041 -> score=0.020959 followers=1598
+  12. user 10671602 -> score=0.020356 followers=1552
+  13. user 18927441 -> score=0.019307 followers=1472
+  14. user 16303106 -> score=0.019307 followers=1472
+  15. user 90420314 -> score=0.019110 followers=1457
+
+Top users by betweenness centrality (bridges):
+   1. user 813286 -> score=0.135693 followers=2576
+   2. user 15846407 -> score=0.070470 followers=717
+   3. user 17093617 -> score=0.062185 followers=1152
+   4. user 15439395 -> score=0.038921 followers=1076
+   5. user 3359851 -> score=0.029270 followers=1873
+   6. user 2367911 -> score=0.027848 followers=589
+   7. user 12611642 -> score=0.024094 followers=646
+   8. user 59804598 -> score=0.021221 followers=1170
+   9. user 22679419 -> score=0.018966 followers=826
+  10. user 15485441 -> score=0.017685 followers=864
+  11. user 5442012 -> score=0.017187 followers=888
+  12. user 12925072 -> score=0.016812 followers=785
+  13. user 40981798 -> score=0.016257 followers=3210
+  14. user 972651 -> score=0.015084 followers=1283
+  15. user 14230524 -> score=0.014686 followers=1179
+
+Top users by PageRank centrality (influence):
+   1. user 115485051 -> score=0.009133 followers=3320
+   2. user 116485573 -> score=0.007765 followers=3
+   3. user 813286 -> score=0.002370 followers=2576
+   4. user 11348282 -> score=0.001402 followers=1691
+   5. user 40981798 -> score=0.001362 followers=3210
+   6. user 7861312 -> score=0.001246 followers=2019
+   7. user 15439395 -> score=0.001109 followers=1076
+   8. user 17093617 -> score=0.001065 followers=1152
+   9. user 15485441 -> score=0.001039 followers=864
+  10. user 90420314 -> score=0.001006 followers=1457
+  11. user 14230524 -> score=0.001001 followers=1179
+  12. user 18396070 -> score=0.000985 followers=251
+  13. user 1183041 -> score=0.000980 followers=1598
+  14. user 14824849 -> score=0.000976 followers=893
+  15. user 16303106 -> score=0.000953 followers=1472
+
+Overlap in top lists (counts of shared users):
+  in_degree shares betweenness: 3, pagerank: 8
+  betweenness shares in_degree: 3, pagerank: 6
+  pagerank shares in_degree: 8, betweenness: 6

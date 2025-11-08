@@ -1,0 +1,49 @@
+Analysis Summary:
+- Raising PageRank alpha to 0.90 (stickier random walk) magnifies top prestige scores (115485051 jumps to 0.0137) while keeping the influencer ordering mostly intact.
+- 14824849 enters the top 10, showing that with longer walk persistence, secondary hubs connected to elite nodes gain influence.
+- Betweenness outputs match other runs, confirming bridge roles are unaffected by PageRank tuning.
+- Overlap statistics mirror the baseline, indicating prestige remains differentiated from bridge roles even under higher damping.
+
+Loaded follower graph with 76,244 users and 1,667,871 directed edges.
+
+Computing centrality measures ...
+Top users by in-degree centrality (followers):
+   1. user 115485051 -> score=0.043545 followers=3320
+   2. user 40981798 -> score=0.042102 followers=3210
+   3. user 43003845 -> score=0.035833 followers=2732
+   4. user 813286 -> score=0.033787 followers=2576
+   5. user 22462180 -> score=0.032410 followers=2471
+   6. user 34428380 -> score=0.032291 followers=2462
+   7. user 15913 -> score=0.027583 followers=2103
+   8. user 7861312 -> score=0.026481 followers=2019
+   9. user 3359851 -> score=0.024566 followers=1873
+  10. user 11348282 -> score=0.022179 followers=1691
+
+Top users by betweenness centrality (bridges):
+   1. user 813286 -> score=0.153862 followers=2576
+   2. user 17093617 -> score=0.063219 followers=1152
+   3. user 15846407 -> score=0.052705 followers=717
+   4. user 3359851 -> score=0.038139 followers=1873
+   5. user 15439395 -> score=0.031118 followers=1076
+   6. user 12611642 -> score=0.023449 followers=646
+   7. user 2367911 -> score=0.019134 followers=589
+   8. user 972651 -> score=0.018582 followers=1283
+   9. user 22679419 -> score=0.018570 followers=826
+  10. user 5442012 -> score=0.018544 followers=888
+
+Top users by PageRank centrality (influence):
+   1. user 115485051 -> score=0.013685 followers=3320
+   2. user 116485573 -> score=0.012318 followers=3
+   3. user 813286 -> score=0.002474 followers=2576
+   4. user 11348282 -> score=0.001562 followers=1691
+   5. user 40981798 -> score=0.001343 followers=3210
+   6. user 7861312 -> score=0.001264 followers=2019
+   7. user 15439395 -> score=0.001200 followers=1076
+   8. user 15485441 -> score=0.001148 followers=864
+   9. user 17093617 -> score=0.001094 followers=1152
+  10. user 14824849 -> score=0.001082 followers=893
+
+Overlap in top lists (counts of shared users):
+  in_degree shares betweenness: 2, pagerank: 5
+  betweenness shares in_degree: 2, pagerank: 3
+  pagerank shares in_degree: 5, betweenness: 3

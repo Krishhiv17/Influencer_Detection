@@ -1,0 +1,31 @@
+Script Overview:
+- `analyze_twitter_centrality.py` merges every SNAP Twitter `.edges` file under `twitter/` into 
+  one directed follower graph using `networkx.DiGraph`. Each line “follower followee” becomes a directed edge, 
+  with blank lines and self-links skipped; this yields the combined ego-network used for all metrics.
+
+- After loading, the script reports node and edge counts, then evaluates three centrality measures—degree, betweenness, 
+  and PageRank—to rank the `--top-k` users for each. Results include the normalized scores, raw follower counts, and 
+  overlap statistics to show how much the lists agree.
+
+Centrality Implementations:
+- Degree centrality uses `nx.in_degree_centrality`, which normalizes each node’s follower count by dividing by `(N-1)` (where `N` is the graph size). 
+  A score of 0.04 means roughly 4 % of the dataset follows that user.
+
+- Betweenness centrality calls `nx.betweenness_centrality` with a sampling parameter `k` (default 200, capped by `N`) 
+  and a configurable random seed. NetworkX applies Brandes’ algorithm on the sampled sources, yielding an approximate 
+  measure of how often a user lies on shortest follower paths between others. Larger `k` values and multiple seeds help validate stability.
+
+- PageRank is implemented via a pure-Python power iteration that avoids SciPy dependencies. It starts with a uniform rank vector and repeatedly:
+  1. Applies the teleport weight `(1 - alpha)/N`.
+  2. Distributes dangling-node mass evenly.
+  3. Propagates each node’s rank to its followees scaled by the damping factor `alpha`.
+  4. Stops when the L1 difference between iterations drops below the tolerance or the maximum iteration count is reached.
+  The resulting scores form a probability distribution summing to 1; higher values indicate nodes followed by other influential users.
+
+CLI Parameters:
+- `--data-dir` sets the dataset location; `--top-k` controls output size.
+- `--betweenness-samples` and `--betweenness-seed` tune the approximation (sample size and RNG seed).
+- `--pagerank-alpha`, `--pagerank-tol`, and `--pagerank-max-iter` adjust the PageRank damping factor, convergence tolerance, and iteration budget.
+
+Together, the script provides a full comparison of popularity (degree), brokerage (betweenness), and prestige (PageRank) for the 
+anonymized SNAP Twitter ego-network sample.

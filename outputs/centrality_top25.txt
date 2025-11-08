@@ -1,0 +1,94 @@
+Analysis Summary:
+- Extending top-k to 25 reveals the long tail of influential users, adding media brands (428333, 783214) and tech figures (657863) alongside celebrity hubs.
+- Betweenness top 25 shows a richer connector set, including mid-degree accounts like 59804598 and 6519522 that stitch ego-nets together.
+- Overlap counts jump (14 shared between degree and PageRank), illustrating convergence across metrics once more ranks are considered.
+- Use this output as the primary appendix table—ideal for highlighting cases where influence, popularity, and brokerage diverge or coincide.
+
+Loaded follower graph with 76,244 users and 1,667,871 directed edges.
+
+Computing centrality measures ...
+Top users by in-degree centrality (followers):
+   1. user 115485051 -> score=0.043545 followers=3320
+   2. user 40981798 -> score=0.042102 followers=3210
+   3. user 43003845 -> score=0.035833 followers=2732
+   4. user 813286 -> score=0.033787 followers=2576
+   5. user 22462180 -> score=0.032410 followers=2471
+   6. user 34428380 -> score=0.032291 followers=2462
+   7. user 15913 -> score=0.027583 followers=2103
+   8. user 7861312 -> score=0.026481 followers=2019
+   9. user 3359851 -> score=0.024566 followers=1873
+  10. user 11348282 -> score=0.022179 followers=1691
+  11. user 1183041 -> score=0.020959 followers=1598
+  12. user 10671602 -> score=0.020356 followers=1552
+  13. user 18927441 -> score=0.019307 followers=1472
+  14. user 16303106 -> score=0.019307 followers=1472
+  15. user 90420314 -> score=0.019110 followers=1457
+  16. user 48485771 -> score=0.018126 followers=1382
+  17. user 31353077 -> score=0.017930 followers=1367
+  18. user 63485337 -> score=0.017431 followers=1329
+  19. user 15853668 -> score=0.017300 followers=1319
+  20. user 972651 -> score=0.016828 followers=1283
+  21. user 79797834 -> score=0.016461 followers=1255
+  22. user 14075928 -> score=0.015844 followers=1208
+  23. user 428333 -> score=0.015634 followers=1192
+  24. user 14230524 -> score=0.015464 followers=1179
+  25. user 59804598 -> score=0.015346 followers=1170
+
+Top users by betweenness centrality (bridges):
+   1. user 813286 -> score=0.153862 followers=2576
+   2. user 17093617 -> score=0.063219 followers=1152
+   3. user 15846407 -> score=0.052705 followers=717
+   4. user 3359851 -> score=0.038139 followers=1873
+   5. user 15439395 -> score=0.031118 followers=1076
+   6. user 12611642 -> score=0.023449 followers=646
+   7. user 2367911 -> score=0.019134 followers=589
+   8. user 972651 -> score=0.018582 followers=1283
+   9. user 22679419 -> score=0.018570 followers=826
+  10. user 5442012 -> score=0.018544 followers=888
+  11. user 15485441 -> score=0.017472 followers=864
+  12. user 59804598 -> score=0.016894 followers=1170
+  13. user 14230524 -> score=0.015542 followers=1179
+  14. user 13348 -> score=0.014491 followers=426
+  15. user 17092592 -> score=0.013159 followers=680
+  16. user 7846 -> score=0.012755 followers=563
+  17. user 79797834 -> score=0.012656 followers=1255
+  18. user 12044602 -> score=0.012489 followers=189
+  19. user 3840 -> score=0.012132 followers=351
+  20. user 10350 -> score=0.011812 followers=1096
+  21. user 12925072 -> score=0.011476 followers=785
+  22. user 16409683 -> score=0.011221 followers=162
+  23. user 40981798 -> score=0.011143 followers=3210
+  24. user 63796828 -> score=0.009618 followers=61
+  25. user 7861312 -> score=0.009540 followers=2019
+
+Top users by PageRank centrality (influence):
+   1. user 115485051 -> score=0.009133 followers=3320
+   2. user 116485573 -> score=0.007765 followers=3
+   3. user 813286 -> score=0.002370 followers=2576
+   4. user 11348282 -> score=0.001402 followers=1691
+   5. user 40981798 -> score=0.001362 followers=3210
+   6. user 7861312 -> score=0.001246 followers=2019
+   7. user 15439395 -> score=0.001109 followers=1076
+   8. user 17093617 -> score=0.001065 followers=1152
+   9. user 15485441 -> score=0.001039 followers=864
+  10. user 90420314 -> score=0.001006 followers=1457
+  11. user 14230524 -> score=0.001001 followers=1179
+  12. user 18396070 -> score=0.000985 followers=251
+  13. user 1183041 -> score=0.000980 followers=1598
+  14. user 14824849 -> score=0.000976 followers=893
+  15. user 16303106 -> score=0.000953 followers=1472
+  16. user 428333 -> score=0.000901 followers=1192
+  17. user 30364057 -> score=0.000900 followers=771
+  18. user 62581962 -> score=0.000887 followers=1149
+  19. user 972651 -> score=0.000886 followers=1283
+  20. user 783214 -> score=0.000860 followers=1123
+  21. user 79797834 -> score=0.000858 followers=1255
+  22. user 43003845 -> score=0.000853 followers=2732
+  23. user 657863 -> score=0.000853 followers=801
+  24. user 14075928 -> score=0.000838 followers=1208
+  25. user 15846407 -> score=0.000812 followers=717
+
+Overlap in top lists (counts of shared users):
+  in_degree shares betweenness: 8, pagerank: 14
+  betweenness shares in_degree: 8, pagerank: 10
+  pagerank shares in_degree: 14, betweenness: 10
