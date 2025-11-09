@@ -1,0 +1,189 @@
+% -*- latex -*-
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{siunitx}
+\usepackage{authblk}
+\geometry{margin=1in}
+\title{Detecting Influencers in Social Media Graphs: \newline A Comparative Study of Degree, Betweenness, and PageRank on the SNAP Twitter Dataset}
+\author[1]{Aayan Jain}
+\author[1]{(Project repository: \texttt{Influencer_Detection})}
+\affil[1]{School / Course — Term Paper}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper studies the problem of influencer detection on social media graphs using classical centrality measures. We build a directed follower graph from the SNAP Twitter ego-network dataset and compare three centrality measures — in-degree (popularity), betweenness centrality (brokerage), and PageRank (prestige) — for their ability to identify influential users. We describe the data preprocessing, algorithmic implementation (including a pure-Python PageRank power iteration used to avoid additional numeric dependencies), and an experimental protocol measuring rank overlap and correlation across networks. We present quantitative results, visualizations, and a discussion highlighting strengths and limitations of each approach, plus reproducible artifacts and recommendations for future work.
+\end{abstract}
+
+\textbf{Keywords:} influencer detection, centrality measures, PageRank, betweenness, SNAP, social networks, NetworkX
+
+\section{Introduction}
+Influencer detection is an important task in social network analysis, marketing, and information diffusion modeling. While many modern approaches use machine learning and content features, classical graph-theoretic centrality measures remain powerful, interpretable baselines. This work compares three canonical centrality measures on the SNAP Twitter ego-network dataset: in-degree centrality (a direct popularity proxy), betweenness centrality (measuring brokerage on shortest paths), and PageRank (measuring prestige influenced by neighbors). Our goal is to provide a careful empirical comparison, demonstrate reproducible experiments, and discuss when each metric is suitable for detecting different kinds of influencers.
+
+\subsection{Contributions}
+\begin{itemize}[nosep]
+  \item A reproducible pipeline for merging SNAP `.edges` files into a directed follower graph and computing multiple centrality scores (code: \texttt{analyze_twitter_centrality.py}).
+  \item A pure-Python PageRank implementation (power iteration) to ensure portability in environments without SciPy/NumPy.
+  \item An empirical evaluation across ego networks showing rank correlations, top-k overlap (Jaccard), and qualitative case studies with visualizations.
+  \item Recommendations for experimental design and reproducible artifact generation (CSV/JSON outputs, seeds, and scripts).
+\end{itemize}
+
+\section{Related Work}
+Centrality measures have a long history in social network analysis. Degree-based measures are the simplest popularity proxies. Freeman~\cite{freeman1977set} formalized betweenness centrality, and Brandes~\cite{brandes2001faster} developed an algorithmic speedup that is widely used in software packages. PageRank was introduced by Brin and Page for ranking web pages and has been adapted for social networks~\cite{page1999pagerank,kleinberg1999authoritative}. Several empirical comparisons of centrality measures highlight that different notions of importance capture complementary properties~\cite{borgatti2005centrality}. Datasets such as SNAP provide anonymized ego-networks useful for reproducible experiments~\cite{leskovec2014snap}.
+
+\section{Data}
+\subsection{Dataset description}
+We use the SNAP Twitter ego-network collection. The repository contains many `.edges` files under the `twitter/` folder; each file corresponds to an ego network and lists directed follower edges in the format \texttt{follower followee} per line. The project repository includes an `outputs/` directory with several prior run artifacts. All experiments described here were run on merged graphs produced by concatenating the `.edges` files (after simple cleaning such as skipping blank lines and self-edges).
+
+\subsection{Preprocessing}
+For each `.edges` file we:
+\begin{enumerate}[nosep]
+  \item Read lines and split into node identifiers (kept as strings to preserve anonymity).
+  \item Skip empty lines, lines starting with `#`, and self-edges where follower==followee.
+  \item Merge edges across selected files into a single directed graph for each experiment.
+\end{enumerate}
+
+We experimented with loading a configurable number of files (e.g., 30 by default for fast EDA) and with larger merges for final experiments.
+
+\section{Methods}
+\subsection{Graph construction}
+We construct a directed graph $G=(V,E)$ where a directed edge $(u\to v)$ indicates that user $u$ follows user $v$. Nodes are represented as string identifiers (the SNAP files are anonymized). The code uses NetworkX's \texttt{DiGraph} and adds edges in batches where possible.
+
+\subsection{Centrality measures}
+We compute three centrality measures:
+\paragraph{In-degree centrality} For node $v$, the in-degree is $d_{in}(v) = |\{u:\ (u\to v)\in E\}|$. NetworkX provides a normalized in-degree centrality dividing by $(N-1)$; both raw and normalized forms are recorded.
+
+\paragraph{Betweenness centrality} Betweenness centrality measures the fraction of shortest paths that pass through a node. Exact computation is expensive, so we use NetworkX's sampled betweenness approach with parameter $k$ (number of source nodes) to approximate betweenness:
+\[ b(v) = \sum_{s\neq t\neq v} \frac{\sigma_{st}(v)}{\sigma_{st}}. \]
+We vary $k$ in experiments (e.g., 50, 200, 500) to trade off accuracy and runtime.
+
+\paragraph{PageRank} We compute PageRank using the power iteration approach with damping factor $\alpha$ (commonly 0.85). When NetworkX's built-in implementation is available we use it; otherwise we fall back to a pure-Python power iteration implementation included in \texttt{analyze\_twitter\_centrality.py}. The PageRank vector is normalized to sum to 1.
+
+\subsection{Evaluation metrics}
+We compare the centrality rankings using:
+\begin{itemize}[nosep]
+  \item Top-$k$ overlap (Jaccard index) for top-$k$ sets.
+  \item Rank correlation (Spearman's $\rho$) computed both on the full ranking and restricted to top-$k$ nodes.
+  \item Case studies: inspect the ego-network structure of top-ranked nodes to interpret differences between metrics.
+\end{itemize}
+
+\section{Experimental setup}
+\subsection{Parameters}
+Default parameters used unless specified:\\
+\begin{itemize}[nosep]
+  \item Top-$k$ reported: $k=25$.\
+  \item Betweenness sampling sizes: $k\in\{50,200,500\}$ (cap at number of nodes).\
+  \item PageRank damping factor: $\alpha\in\{0.6, 0.85, 0.95\}$.\
+  \item Pagerank convergence tolerance: $10^{-6}$; max iterations: 100.\
+\end{itemize}
+
+\subsection{Reproducibility}
+To ensure reproducibility we record the command-line arguments, the random seed for betweenness sampling, node/edge counts, and timestamps for each run in an output JSON metadata file. We recommend running experiments inside a virtual environment created via `venv` and installing packages from `requirements.txt`.
+
+\section{Results}
+\subsection{Descriptive statistics}
+Table~\ref{tab:graphstats} summarizes selected graph statistics for merged graphs used in the experiments. (Replace placeholders with numeric values produced by the experimental runs.)
+\begin{table}[H]
+\centering
+\caption{Graph statistics for example merged graph (30 files merged)}
+\label{tab:graphstats}
+\begin{tabular}{lrr}
+	oprule
+Statistic & Value \\
+\midrule
+Number of nodes & 3,483 \\
+Number of directed edges & 61,615 \\
+Average in-degree & 17.6902 \\
+Average out-degree & 17.6902 \\
+Density & 0.005080 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Top-k comparisons}
+We present the top-25 users for each metric and compute pairwise Jaccard overlap and Spearman correlations. Table~\ref{tab:overlaps} (placeholder) shows aggregated overlap results across multiple ego networks. Include CSV outputs created by the script to populate these tables.
+
+\begin{table}[H]
+\centering
+\caption{Pairwise top-25 Jaccard overlap (computed on the merged 30-file graph)}
+\label{tab:overlaps}
+\begin{tabular}{lrrr}
+	oprule
+ & In-degree & Betweenness & PageRank \\
+\midrule
+In-degree & 1.00 & 0.11 & 0.316 \\
+Betweenness & 0.11 & 1.00 & 0.163 \\
+PageRank & 0.316 & 0.163 & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Rank correlations}
+Spearman correlation between in-degree rank and PageRank rank on the merged 30-file graph is $\rho\approx 0.846$ (p-value $<10^{-6}$), indicating a strong monotonic relationship for this sample. Correlations involving betweenness are more sensitive to the approximation/sample size and are reported per-experiment in the CSV artifacts; generally, betweenness shows weaker correlation with raw degree and PageRank because it captures a different structural role (brokerage versus popularity/prestige). Discuss how PageRank correlates strongly with in-degree due to the influence of high-degree followers but still differs because of prestige propagation.
+
+\subsection{Case studies}
+We include a small qualitative analysis of selected ego networks (figures saved under `outputs/eda/` by the notebook). Figure~\ref{fig:subgraph} illustrates a subgraph around top in-degree nodes where one can observe densely connected hubs; betweenness highlights intermediate broker nodes connecting otherwise separated clusters.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{outputs/eda/subgraph_top_nodes.png}
+  \caption{Subgraph around top in-degree nodes (labels shown for top nodes).}
+  \label{fig:subgraph}
+\end{figure}
+
+\section{Discussion}
+Our experiments show that simple degree centrality identifies obvious hubs (accounts with many direct followers), PageRank often recovers similar accounts but can rank nodes higher if they are followed by other influential nodes, while betweenness highlights structurally important bridge nodes that may not have many followers but occupy critical positions in shortest-path connectivity. Implications:
+\begin{itemize}[nosep]
+  \item Use degree when the goal is to find popular accounts quickly.\
+  \item Use PageRank when influence through prestige matters (e.g., retweet cascades where who follows whom matters).\
+  \item Use betweenness to find brokers or accounts that can bridge communities (useful for targeted interventions or information dissemination strategies).\
+\end{itemize}
+
+Limitations: the SNAP dataset is an anonymized, static snapshot and may not reflect current real-world follower dynamics. Betweenness sampling is approximate and may vary with seed and sample size. The pure-Python PageRank is portable but slower than optimized linear-algebra implementations.
+
+\section{Conclusion and Future Work}
+We presented a reproducible comparison of degree, betweenness, and PageRank for influencer detection on SNAP Twitter ego-networks. Future directions include:
+\begin{itemize}[nosep]
+  \item Scaling PageRank with NumPy/SciPy for large graphs and using sparse linear algebra.\
+  \item Incorporating temporal and content signals (retweets, mentions) to measure influence beyond static follower structure.\
+  \item Evaluating against ground-truth influence signals if available (e.g., retweet cascades, follower growth).\
+  \item Extending to supervised models (e.g., combine centralities as features for a classifier) and GNN approaches for node ranking.\
+\end{itemize}
+
+\section*{Reproducibility and artifacts}
+The repository includes the following artifacts useful for reproducing the experiments:
+\begin{itemize}[nosep]
+  \item `analyze_twitter_centrality.py` — main script for computing metrics and printing top-k lists.\
+  \item `eda_twitter_snap.ipynb` — exploratory notebook that lists files, builds a combined graph (configurable number of ego files), computes distributions, and saves exploratory figures to `outputs/eda/`.\
+  \item `requirements.txt` — package list for reproducible environment.\
+  \item `outputs/` — directory with CSV and PNG artifacts produced by previous runs.\
+\end{itemize}
+
+\section*{Acknowledgements}
+We used the SNAP dataset and NetworkX for graph processing. Thank you to the course instructors and peers for feedback.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\section{Implementation notes}
+The main script includes a fallback PageRank implementation using power iteration to avoid SciPy/NumPy dependency issues. The code is structured for clarity and reproducibility. Below is a short pseudo-contract for the PageRank routine:
+\begin{itemize}[nosep]
+  \item Input: directed graph $G$, damping $\alpha$, tolerance $\epsilon$, max iterations $T$.\
+  \item Output: map node $\to$ score (normalized to sum to 1).\
+  \item Error modes: returns empty map for zero-node graphs; converges early if L1 diff $<\epsilon$.\
+\end{itemize}
+
+\end{document}

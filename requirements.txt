@@ -1,0 +1,5 @@
+networkx>=2.8
+pandas>=1.4
+matplotlib>=3.5
+tqdm>=4.60
+numpy>=1.22
