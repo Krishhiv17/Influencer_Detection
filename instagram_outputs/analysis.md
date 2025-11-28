@@ -1,5 +1,10 @@
 # Instagram Influence Analysis using LAII
 
+## Project Goal
+
+The goal of this project is to move beyond naïve metrics like follower count and single centrality measures, and instead build a **data-driven framework for influencer detection on Instagram**. Using the Instagram follower network and rich per-user engagement signals, we design and evaluate the **Layer-Aware Influence Index (LAII)** — a learned influence score that combines multiple centralities. The end objective is to identify **high-engagement micro-influencers and community-level champions** who are structurally well-positioned in the network and deliver stronger engagement efficiency than traditional, follower-based “influencers”.
+
+
 ## 1. Defining LAII (Layer-Aware Influence Index)
 
 The **Layer-Aware Influence Index (LAII)** is a **learned influence score** that combines multiple network centrality measures into a single value designed to approximate a user’s **engagement efficiency**.
