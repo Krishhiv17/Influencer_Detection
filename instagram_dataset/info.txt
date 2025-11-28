@@ -1,0 +1,7 @@
+pos = Number of posts
+flr = Number of Followers
+flg = Number of Following
+eg = Engagement grade, a scale of 1 to 12 that reflects the strength of engagement rate relative to the number of followers (click to learn more)
+er = Engagement Rate, i.e. likes+comments / followers
+fg = Followers growth % in a month
+op = Outsiders percentage %, i.e. non-followers that liked a post, divided by all unique likers
